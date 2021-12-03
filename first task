@@ -1,0 +1,59 @@
+/* Создать абстрактный класс “AClass” у которого будет свойство “Numbers” типа Array, который будет содержать n натуральных чисел.
+Также AClass должен иметь метод “fill”, который заполняет массив Numbers случайными числами; метод “factorial”, который возвращает
+массив факториалов из массива Numbers; и абстрактный метод “sort”.
+Конструктор принимает один параметр “n” и вызывает метод “fill”. Метод “fill” можно вызывать только из методов класса “AClass”.
+Метод “factorial” может вызываться из класса AClass и из дочерних классов.
+Реализовать два дочерних класса “Class1” и “Class2” с методом “sort” который сортирует массив Numbers, а затем выдает массив факториалов.
+Способы сортировки в классах “Class1” и “Class2” должны различаться. */
+
+class AClass {
+  constructor(n) {
+    this.n = n;
+    this.Numbers = [];
+    this.#fill();
+  }
+
+  #fill() {
+    for (let i = 0; i < this.n; i += 1) {
+      const randomNum = Math.floor(Math.random() * 10);
+      this.Numbers.push(randomNum);
+    }
+  }
+
+  factorial() {
+    const calculateFactorial = (num) => (
+      (num != 1) ? num * calculateFactorial(num - 1) : 1
+    );
+    return this.Numbers.map((num) => calculateFactorial(num));
+  }
+
+  sort() {}
+}
+
+class Class1 extends AClass {
+  sort() {
+    this.Numbers.sort((a, b) => a - b);
+    return super.factorial();
+  }
+}
+
+class Class2 extends AClass {
+  sort() {
+    const quicksort = (arr) => {
+      if (arr.length <= 1) {
+        return arr;
+      }
+
+      let pivot = arr[0];
+      let left = []; 
+      let right = [];
+
+      for (var i = 1; i < arr.length; i++) {
+        arr[i] < pivot ? left.push(arr[i]) : right.push(arr[i]);
+      }
+      return quicksort(left).concat(pivot, quicksort(right));
+    };
+    quicksort(this.Numbers);
+    return super.factorial();
+  }
+}
