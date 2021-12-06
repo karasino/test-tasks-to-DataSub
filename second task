@@ -1,0 +1,26 @@
+/* Таблица Students имеет поля StudentId, FirstName, LastName, Group и содержит информацию о студентах института.
+Таблица Exams имеет поля StudentId, ExamName, Result и содержит результаты экзаменов студентов.
+a) написать SQL запрос, который выводит имена и фамилии студентов у которых больше двух экзаменов с результатом меньше 3.
+b) написать SQL запрос, который выводит название групп, в которых таких студентов больше 10 */
+
+SELECT FirstName, LastName
+FROM
+(SELECT Exams.StudentId, Students.FirstName, Students.LastName, COUNT(Exams.Result) AS CountEx
+FROM Exams
+LEFT JOIN Students ON Students.StudentId = Exams.StudentId
+WHERE Exams.Result < 3
+GROUP BY Exams.StudentId, Student.FirstName, Student.LastName)
+WHERE CountEx > 2
+
+SELECT Group
+FROM
+(SELECT Group, COUNT(FirstName) AS CountSt
+FROM
+(SELECT Exams.StudentId, Students.FirstName, Students.LastName, Students.Group, COUNT(Exams.Result) AS CountEx
+FROM Exams
+LEFT JOIN Students ON Students.StudentID = Exams.StudentID
+WHERE Exams.Result < 3
+GROUP BY Exams.StudentId, Students.FirstName, Students.LastName, Students.Group)
+WHERE CountEx > 2
+GROUP BY Group)
+WHERE CountSt > 10
